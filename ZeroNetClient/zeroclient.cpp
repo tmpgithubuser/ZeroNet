@@ -163,6 +163,7 @@ bool ZeroClient::sendLogin()
 
 void ZeroClient::addDataToBuffer(char *data, int size)
 {
+    //加入缓冲区
     mBuf.append(data,size);
 
     // 把数据转换成指令模式
@@ -180,7 +181,7 @@ void ZeroClient::addDataToBuffer(char *data, int size)
         processCmd(cmd, line);
     }
 }
-
+    //cmd:命令  data:附带数据
 void ZeroClient::processCmd(std::string &cmd, std::string &data)
 {
     std::map<std::string, std::string> args = parseArgs(data);

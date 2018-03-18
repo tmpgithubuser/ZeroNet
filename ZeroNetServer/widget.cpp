@@ -112,20 +112,33 @@ Widget::Widget(QWidget *parent) :
 
 
     // 域名设置
-    QLabel *lbDomain =  new QLabel("域名:", this);
-    lbDomain->setGeometry(630,330,30,30);
+    QLabel *lbDomain =  new QLabel("域 名:", this);
+    lbDomain->setGeometry(620,310,40,30);
     mEditDomain = new QLineEdit(this);
     mEditDomain->setText("127.0.0.1");
     mEditDomain->setMaxLength(80);
-    mEditDomain->setGeometry(660,330,80,30);
+    mEditDomain->setGeometry(660,310,80,30);
 
-    // 端口设置
-    QLabel *lbPort=  new QLabel("端口:", this);
-    lbPort->setGeometry(630,370,30,30);
+    // 端口设置(内网穿透)
+    //Client发送端口
+    QLabel *lbPort=  new QLabel("端口1:", this);
+    lbPort->setGeometry(620,340,40,30);
+    lbPort->setToolTip("Client发送端口");
     mEditPort = new QLineEdit(this);
     mEditPort->setText("18000");
     mEditPort->setValidator(new QIntValidator(1,65535));
-    mEditPort->setGeometry(660,370,80,30);
+    mEditPort->setGeometry(660,340,80,30);
+
+    //Sever接受端口
+    QLabel *lbPort2= new QLabel("端口2:",this);
+    lbPort2->setGeometry(620,370,40,30);
+    lbPort2->setToolTip("Sever接收端口(默认相同，用于内网穿透)");
+    mEditPort2 = new QLineEdit(this);
+    mEditPort2->setText("18000");
+    mEditPort2->setValidator(new QIntValidator(1,65535));
+    mEditPort2->setGeometry(660,370,80,30);
+    //同步端口1更改(默认相同)
+    connect(mEditPort,SIGNAL(textChanged(QString)),mEditPort2,SLOT(setText(QString)));
 
     // 开始服务端
     mBtStartServer = new QPushButton("开启服务端",this);
@@ -326,7 +339,7 @@ void Widget::quitClicked()
 //槽函数
 void Widget::aboutClicked()
 {
-    QMessageBox::about(this, tr("Name"), tr("Joliph & hhd & wdd"));
+    QMessageBox::about(this, tr("Name"), tr("Joliph & jiexixijie & wdd"));
 }
 
 void Widget::addClientToTable(int id, QString name, QString ip, int port, QString systemInfo)
@@ -356,7 +369,8 @@ void Widget::addClientToTable(int id, QString name, QString ip, int port, QStrin
     QTableWidgetItem *itemSystemInfo = new QTableWidgetItem(systemInfo);
     mClientTable->setItem(count, 4 , itemSystemInfo);
 
-    QString Location="北京";  //通过ip查询，暂时没写
+    //通过ip查询
+    QString Location=ipLocation(ip);
     QTableWidgetItem *itemLocation = new QTableWidgetItem(Location);
     mClientTable->setItem(count, 5 , itemLocation);
 }
@@ -402,7 +416,8 @@ void Widget::startServer()
         mBtStartServer->setText("开启服务端");
         mEditPort->setReadOnly(false);
     } else {
-        mZeroServer->start(mEditPort->text().toInt());
+        //开启端口为Sever接收端口
+        mZeroServer->start(mEditPort2->text().toInt());
         if (mZeroServer->server()->server()->isListening()) {
             QMessageBox::information(this,"提示","开启服务端成功");
             mBtStartServer->setText("停止服务端");
@@ -487,3 +502,37 @@ void Widget::createClient()
     saveFile.close();
 }
 
+QString Widget::ipLocation(QString ip)
+{
+    /*-----------------------------------------
+    局域网IP地址范围
+    A类：10.0.0.0-10.255.255.255
+    B类：172.16.0.0-172.31.255.255
+    C类：192.168.0.0-192.168.255.255
+    -------------------------------------------*/
+    QString Location="内网";
+    //判断是否为内网地址
+    QStringList list=ip.split(".");
+    if(list[0]=="10" || (list[0]=="172" && list[1].toInt()>15 && list[1].toInt()<32)\
+            || (list[0]=="192" && list[1]=="168") || ip=="127.0.0.1"  )
+    {
+       return Location;
+    }
+    //使用126接口进行ip查询
+    QString Starturl="http://ip.ws.126.net/ipquery?ip=";
+    Starturl.append(ip);
+    QUrl url(Starturl);
+    QNetworkRequest request(url);
+    QNetworkAccessManager *manger=new QNetworkAccessManager();
+    QNetworkReply *reply=manger->get(request);
+    QEventLoop loop;
+    connect(reply,SIGNAL(finished()),&loop,SLOT(quit()));
+    loop.exec();
+    //编码转换
+    QTextCodec *text=QTextCodec::codecForName("GBK");
+    QString html=text->toUnicode(reply->readLine());
+    QRegExp city("lc=\"(.*)\"");
+    city.indexIn(html);
+    Location=city.cap(1);
+    return Location;
+}

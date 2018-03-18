@@ -21,7 +21,6 @@
 #include <QMessageBox>
 #include "filetransfer.h"
 #include <QSoundEffect>
-
 class FileSpy : public QWidget
 {
     Q_OBJECT

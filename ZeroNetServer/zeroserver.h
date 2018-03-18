@@ -24,6 +24,7 @@ public:
     void stop();
 
     // 用id来获取ZeroClient
+    //调用了ZeriClient中的函数
     ZeroClient *client(int id) {
         return mClients[id];
     }

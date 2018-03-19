@@ -54,7 +54,7 @@ ZeroNet的客户端在原代码的基础上添加了打开确认机制，防止�
 
 
 2017.12.16 ZeroNet Client 2.0<br>
-1.外网上线支持内网映射啦，端口1为肉鸡的目标端口，端口2为映射后的接收端口<br>
+1.外网上线支持内网映射啦，端口1为客户端的目标端口，端口2为映射后服务端的接收端口<br>
 2.调用了126的接口,增加了ip地址的显示功能(ip地址所在城市或者显示内网)<br>
 (若出现提示connect: Cannot connect (null)::aboutToQuit() to QNativeWifiEngine::closeHandle()，需要把D:\QT\Tools\mingw530_32\opt\bin目录下libeay32.dll和ssleay32.dll,两个dll文件拷贝到D:\coding\QT\5.7\mingw53_32\bin下)<br>
 

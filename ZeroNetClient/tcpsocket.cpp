@@ -85,6 +85,11 @@ bool TcpSocket::sendData(const char *data,unsigned int size)
     int ret = SOCKET_ERROR;
     const unsigned int packetLen = 800;
     // 小于pakcetLen的话，就直接发送，不然就分包发送
+
+    //
+    //对发送数据进行加密
+    //
+
     if (size <= packetLen) {
         ret = send(mSock, data, size, 0);
 

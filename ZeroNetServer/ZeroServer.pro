@@ -51,3 +51,4 @@ DISTFILES += \
     resources/文件下传完毕.wav \
     resources/有主机上线请注意.wav \
     resources/有主机下线请注意.wav
+

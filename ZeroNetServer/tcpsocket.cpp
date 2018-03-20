@@ -20,6 +20,12 @@ void TcpSocket::close()
 
 void TcpSocket::write(QByteArray data)
 {
+    //
+    //需要对写入数据data进行加密
+    //
+
+
+
     mSock->write(data);
 
     if (!mSock->waitForBytesWritten(3000)) {

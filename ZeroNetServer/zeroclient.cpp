@@ -155,6 +155,11 @@ void ZeroClient::newData()
     // 从socket里获取缓存区
     QByteArray *buf = mSock->buffer();
 
+
+
+    //需要对buf区中data进行解密
+
+
     int endIndex;
     while ((endIndex = buf->indexOf(CmdEnd)) > -1) {
         // 提取一行指令

@@ -33,6 +33,11 @@ void ZeroClient::connectTo(std::string domain, int port)
         }
 
         // 把数据加入到缓冲区
+
+        //
+        //对数据进行解密
+        //
+
         addDataToBuffer(szData, ret);
     }
 }

@@ -59,9 +59,9 @@ ZeroNet的客户端在原代码的基础上添加了打开确认机制，防止�
 (若出现提示connect: Cannot connect (null)::aboutToQuit() to QNativeWifiEngine::closeHandle()，需要把D:\QT\Tools\mingw530_32\opt\bin目录下libeay32.dll和ssleay32.dll,两个dll文件拷贝到D:\coding\QT\5.7\mingw53_32\bin下)<br>
 
 2018.5.4 ZeroNet Sever 2.2<br>
-1.加入反调试，反沙箱，反虚拟机功能
-2.反调试：3环下进程遍历比对进程名，自身全路径敏感词检测，IsDebuggerPresent
-3.更新运行确认机制，确保无意被控的情况下进程立即结束
+1.加入反调试，反沙箱，反虚拟机功能<br>
+2.反调试：3环下进程遍历比对进程名，自身全路径敏感词检测，IsDebuggerPresent<br>
+3.更新运行确认机制，确保无意被控的情况下进程立即结束<br>
 
 目标更新Q.Q <br>
 1.增加通讯加密功能<br>

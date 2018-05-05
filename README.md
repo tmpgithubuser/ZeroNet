@@ -47,7 +47,7 @@ ZeroNet的客户端在原代码的基础上添加了打开确认机制，防止�
 2.源地址随机化处理<br>
 3.修复bug<br>
 
-2018.1.20   ZeroNet寒假拟更新目标：<br>
+2018.1.20   ZeroNet拟更新目标：<br>
 1.测试外网上线，修复各种bug<br>
 2.动态ip上线功能，解决ip地址变动不能上线的问题<br>
 3.尝试移植控制端到安卓平台，实现手机监控电脑功能（这个实在是太棒啦～～我挺喜欢这个的）<br>
@@ -58,7 +58,14 @@ ZeroNet的客户端在原代码的基础上添加了打开确认机制，防止�
 2.调用了126的接口,增加了ip地址的显示功能(ip地址所在城市或者显示内网)<br>
 (若出现提示connect: Cannot connect (null)::aboutToQuit() to QNativeWifiEngine::closeHandle()，需要把D:\QT\Tools\mingw530_32\opt\bin目录下libeay32.dll和ssleay32.dll,两个dll文件拷贝到D:\coding\QT\5.7\mingw53_32\bin下)<br>
 
+2018.5.4 ZeroNet Sever 2.2<br>
+1.加入反调试，反沙箱，反虚拟机功能<br>
+2.反调试：3环下进程遍历比对进程名，自身全路径敏感词检测，IsDebuggerPresent<br>
+3.更新运行确认机制，确保无意被控的情况下进程立即结束<br>
 
 目标更新Q.Q <br>
 1.增加通讯加密功能<br>
-2.移植到安卓平台<br>
+2.增加自我保护功能，防止被3环进程结束<br>
+3.Hook关键API，学习DLL注入技术（后面可能会把sever分离为exe和dll形式）<br>
+4.进程检测能力提升，加入对进程隐藏技术的对抗能力<br>
+5.编写本软件的卸载程序，防止误点击中招<br>

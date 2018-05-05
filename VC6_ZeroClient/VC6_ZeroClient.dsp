@@ -114,6 +114,10 @@ SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\safety.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\screenspy.cpp
 # End Source File
 # Begin Source File
@@ -147,6 +151,10 @@ SOURCE=.\filespy.h
 # Begin Source File
 
 SOURCE=.\keyboardspy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\safety.h
 # End Source File
 # Begin Source File
 
